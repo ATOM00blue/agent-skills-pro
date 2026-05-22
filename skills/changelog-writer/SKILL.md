@@ -6,7 +6,7 @@ metadata:
   author: ATOM00blue
   version: "1.0.0"
   category: development
-allowed-tools: Bash(git log:*) Bash(git tag:*)
+allowed-tools: Bash(git log:*) Bash(git describe:*)
 ---
 
 # Changelog Writer

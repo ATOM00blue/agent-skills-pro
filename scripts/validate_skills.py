@@ -43,6 +43,9 @@ SKILLS_DIR = REPO_ROOT / "skills"
 # `key: value` scalars and one level of nested mapping (for `metadata`).
 def parse_frontmatter(text: str):
     """Return (frontmatter_dict, body_str). Raises ValueError on malformed input."""
+    # Tolerate a leading UTF-8 BOM (some editors add one) so the delimiter check works.
+    if text.startswith("﻿"):
+        text = text[1:]
     if not text.startswith("---"):
         raise ValueError("missing opening '---' frontmatter delimiter")
 
@@ -67,6 +70,10 @@ def parse_frontmatter(text: str):
     for raw in fm_lines:
         if not raw.strip() or raw.lstrip().startswith("#"):
             continue
+        # YAML forbids tabs for indentation; flag them instead of silently
+        # mis-parsing the line (a tab counts as zero spaces of indent below).
+        if raw[: len(raw) - len(raw.lstrip())].find("\t") != -1:
+            raise ValueError(f"tab indentation is not allowed in frontmatter: {raw!r}")
         indent = len(raw) - len(raw.lstrip(" "))
         line = raw.strip()
         if ":" not in line:
@@ -76,6 +83,8 @@ def parse_frontmatter(text: str):
         value = value.strip()
 
         if indent == 0:
+            if key in data:
+                raise ValueError(f"duplicate frontmatter key: {key!r}")
             if value == "":
                 # Start of a nested mapping (e.g. metadata:).
                 data[key] = {}
@@ -87,6 +96,8 @@ def parse_frontmatter(text: str):
             # Nested key under the most recent top-level mapping.
             if current_key is None or not isinstance(data.get(current_key), dict):
                 raise ValueError(f"unexpected indented line: {raw!r}")
+            if key in data[current_key]:
+                raise ValueError(f"duplicate {current_key} key: {key!r}")
             data[current_key][key] = _scalar(value)
 
     return data, body
@@ -156,8 +167,15 @@ def validate_skill(skill_dir: Path) -> list[str]:
 
     # metadata
     meta = fm.get("metadata")
-    if meta is not None and not isinstance(meta, dict):
-        errors.append("metadata must be a mapping")
+    if meta is not None:
+        if not isinstance(meta, dict):
+            errors.append("metadata must be a mapping")
+        else:
+            for mkey, mval in meta.items():
+                if not isinstance(mval, str) or not mval.strip():
+                    errors.append(
+                        f"metadata.{mkey} must be a non-empty string value"
+                    )
 
     # license / allowed-tools
     for field in ("license", "allowed-tools"):

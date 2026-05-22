@@ -6,7 +6,7 @@ metadata:
   author: ATOM00blue
   version: "1.0.0"
   category: development
-allowed-tools: Bash(git diff:*) Bash(git log:*) Bash(gh pr diff:*)
+allowed-tools: Bash(git diff:*) Bash(git log:*) Bash(git merge-base:*)
 ---
 
 # PR Description Writer

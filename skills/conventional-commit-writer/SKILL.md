@@ -6,7 +6,7 @@ metadata:
   author: ATOM00blue
   version: "1.0.0"
   category: development
-allowed-tools: Bash(git diff:*) Bash(git status:*) Bash(git log:*)
+allowed-tools: Bash(git diff:*)
 ---
 
 # Conventional Commit Writer
