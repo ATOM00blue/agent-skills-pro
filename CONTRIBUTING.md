@@ -67,8 +67,9 @@ The agent decides whether to load your skill from the description alone, so it c
 weight:
 
 - **Third person**, not "I/you": ✅ "Lints YAML files…" ❌ "I can help you lint YAML."
-- **Lead with the key use case**, then list triggers. The combined description text is truncated
-  around 1,536 chars in some clients, so front-load the important words.
+- **Lead with the key use case**, then list triggers. The `description` is capped at 1,024 chars
+  by the spec (the validator enforces it), and some clients show even less of the discovery text,
+  so front-load the important words.
 - **Include the words users actually type** ("slow query", "accessibility", "leaked API key").
 - Be specific. ❌ "Helps with files." ✅ "Extracts text and tables from PDF files… Use when…"
 
