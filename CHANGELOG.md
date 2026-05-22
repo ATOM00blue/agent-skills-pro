@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   tab indentation, duplicate top-level or nested keys, and non-string `metadata` values.
 - `validate_skills.py` now tolerates a leading UTF-8 BOM so BOM-prefixed `SKILL.md` files
   validate correctly.
+- CI: bumped `actions/checkout` to `v5` and `actions/setup-python` to `v6` (Node.js 24
+  runtime) to clear the deprecated-Node.js-20 warning.
 
 ### Fixed
 - Clarified the `description` length guidance in `CONTRIBUTING.md` to reference the spec's

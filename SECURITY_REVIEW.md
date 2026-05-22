@@ -96,6 +96,15 @@ actionable Low items have been fixed (see "Status").
   scalars for nested keys, so the blast radius is small.)
 - Recommended fix: validate that every `metadata` value is a non-empty string.
 
+### L5 — CI actions run on the deprecated Node.js 20 runtime
+
+- Severity: **Low**
+- File: `.github/workflows/ci.yml:18` and `:21`
+- Impact: `actions/checkout@v4` and `actions/setup-python@v5` execute on Node.js 20, which GitHub
+  is removing from runners (forced off in June 2026, removed September 2026). Left unchanged, CI
+  would eventually break. Surfaced as a GitHub workflow annotation on the first push.
+- Recommended fix: bump to `actions/checkout@v5` and `actions/setup-python@v6` (Node.js 24).
+
 ### I1 — CONTRIBUTING description-length note can read as inconsistent with the 1024 cap
 
 - Severity: **Info**
@@ -132,8 +141,10 @@ actionable Low items have been fixed (see "Status").
   bounded, simple grammar. Spec rules for `name`, `description`, `compatibility`, unknown-field
   rejection, and folder-name match are all enforced correctly.
 - **CI / supply chain:** `permissions: contents: read` (least privilege), no secrets used, no
-  third-party install step, actions pinned to `@v4`/`@v5` major tags. Pinning to a full commit
-  SHA would be marginally stricter but is not warranted for this low-risk, read-only workflow.
+  third-party install step, actions pinned to major tags. Pinning to a full commit SHA would be
+  marginally stricter but is not warranted for this low-risk, read-only workflow. The actions were
+  bumped to `actions/checkout@v5` / `actions/setup-python@v6` (Node.js 24) to clear GitHub's
+  deprecated-Node.js-20 runner warning (see L5).
 - **Spec conformance:** all 12 skills pass the validator; `name` == folder for every skill; all
   descriptions are well within 1024 chars (286-357); only spec-defined frontmatter fields are
   used.
@@ -147,6 +158,7 @@ actionable Low items have been fixed (see "Status").
 | L2 | Low | Fixed — validator rejects duplicate top-level keys |
 | L3 | Low | Fixed — validator strips a leading UTF-8 BOM |
 | L4 | Low | Fixed — validator enforces non-empty string `metadata` values |
+| L5 | Low | Fixed — CI actions bumped to checkout@v5 / setup-python@v6 (Node 24) |
 | I1 | Info | Fixed — CONTRIBUTING wording clarified |
 | I2 | Info | No action — false positive (link is inside a code block) |
 
