@@ -1,0 +1,10 @@
+# Normalize line endings to LF for all text files in the repo.
+* text=auto eol=lf
+
+# Explicit: these are always text with LF endings.
+*.md   text eol=lf
+*.py   text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+LICENSE text eol=lf
+.gitignore text eol=lf
